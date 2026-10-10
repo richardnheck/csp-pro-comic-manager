@@ -3,6 +3,8 @@ Clip Studio Paint Pro does not have multi page management like in Ex, so exporti
 
 Unfortunately Clip Studio Paint has no command line, so the export step uses [AutoHotkey](https://www.autohotkey.com/) to drive Clip Studio for you: it opens each page, exports it to PNG and closes it. The book is then built from those images with Windows PowerShell, with nothing else to install.
 
+![The Build CSP Comic window after building a PDF, EPUB and CBZ](docs/screenshot.png)
+
 ## Requirements
 
 - Windows 10 or 11
@@ -39,7 +41,7 @@ Then click one of:
 - **Export Images and Build** – export, then build the ticked formats. Pressing Enter runs this one.
 - **Build Only** – build from the images already exported. Clip Studio isn't needed.
 
-When an export starts, Clip Studio asks you to confirm. Click **OK**, then **don't touch the keyboard or mouse** until it finishes, because the script is typing into Clip Studio. Press **Esc** to stop after the current page.
+When an export starts, Clip Studio asks you to confirm. Click **OK**, then **don't touch the keyboard or mouse** while the script types into Clip Studio. A pop-up tells you when the export has finished and it's safe to use them again. If you chose **Export Images and Build**, the book is built after you click OK on that pop-up. Press **Esc** to stop after the current page.
 
 The book always uses every PNG in `export/images`, so after re-exporting one page the others are reused unchanged.
 
