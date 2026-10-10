@@ -106,8 +106,8 @@ if failed.Length {
 }
 if stopRequested
     msg .= "`nStopped with Esc."
-; No pop-up at the end: the result goes to logs\csp-export.log, and logs\csp-export-last.txt holds
-; just this run's result for callers such as build-comic-app.ahk
+; The result goes to logs\csp-export.log, and logs\csp-export-last.txt holds just this run's
+; result for callers such as build-comic-app.ahk
 try DirCreate(LOG_DIR)
 try FileAppend(FormatTime(, "yyyy-MM-dd HH:mm:ss") "  " msg "`n", LOG_DIR "\csp-export.log", "UTF-8")
 try {
@@ -115,7 +115,12 @@ try {
     last.Write(msg "`r`n")
     last.Close()
 }
-ExitApp((failed.Length || stopRequested) ? 1 : 0)
+
+; Tell the user the script has stopped sending keys, so it's safe to use the keyboard and mouse.
+; Always on top (0x40000) so it shows over Clip Studio.
+ok := !(failed.Length || stopRequested)
+MsgBox(msg "`n`nYou can use the keyboard and mouse again.", "CSP Export", (ok ? "Iconi" : "Icon!") " 0x40000")
+ExitApp(ok ? 0 : 1)
 
 ExportClip(cspHwnd, clipPath) {
     cspPid := WinGetPID(cspHwnd)
