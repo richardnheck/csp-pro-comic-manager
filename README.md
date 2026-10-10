@@ -1,13 +1,12 @@
 # CSP Pro Comic Manager
+Clip Studio Paint Pro does not have multi page management like in Ex, so exporting pages needs to be done manually.  This little application helps automate the process and turns a folder of Clip Studio Paint pages (`.clip` files) into a finished comic: PNG page images, plus a **PDF**, **EPUB** and/or **CBZ** you can read or share.
 
-Turn a folder of Clip Studio Paint pages (`.clip` files) into a finished comic: PNG page images, plus a **PDF**, **EPUB** and/or **CBZ** you can read or share.
-
-Clip Studio has no command line, so the export step uses [AutoHotkey](https://www.autohotkey.com/) to drive Clip Studio for you: it opens each page, exports it to PNG and closes it. The book is then built from those images with Windows PowerShell, with nothing else to install.
+Unfortunately Clip Studio Paint has no command line, so the export step uses [AutoHotkey](https://www.autohotkey.com/) to drive Clip Studio for you: it opens each page, exports it to PNG and closes it. The book is then built from those images with Windows PowerShell, with nothing else to install.
 
 ## Requirements
 
 - Windows 10 or 11
-- [Clip Studio Paint](https://www.clipstudio.net/) (PRO or EX)
+- [Clip Studio Paint](https://www.clipstudio.net/) (PRO or EX - though EX already has a page manager for this so)
 - [AutoHotkey v2](https://www.autohotkey.com/)
 - Windows PowerShell 5.1 (included with Windows)
 
