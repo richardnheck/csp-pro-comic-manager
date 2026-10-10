@@ -8,6 +8,7 @@
 ;   AutoHotkey64.exe csp-export-png.ahk "C:\path\to\comic1"        (every .clip in the folder)
 ;   AutoHotkey64.exe csp-export-png.ahk "C:\path\to\comic1\Page1.clip"
 ;   AutoHotkey64.exe csp-export-png.ahk "C:\path\to\comic1" /clean (delete export\images\*.png first)
+;   AutoHotkey64.exe csp-export-png.ahk "C:\path\to\comic1" /loaddelay=1500 (override LOAD_DELAY, in ms)
 ;   Double-click the script to pick a folder.
 ; Press Esc to stop after the current file.
 ;
@@ -25,6 +26,7 @@ CSP_EXPORT_KEY := "^!+p"
 CSP_OPEN_KEY   := "^o"     ; (Ctrl + O) CSP shortcut for File > Open
 CSP_CLOSE_KEY  := "^w"     ; (Ctrl + W) CSP shortcut for File > Close
 LOAD_DELAY     := 2000     ; ms to let a file finish loading after the Open dialog closes
+                           ; (build-comic-app.ahk passes its own value from build-comic-app.ini)
 DIALOG_TIMEOUT := 10       ; seconds to wait for each dialog
 EXPORT_TIMEOUT := 60       ; seconds to wait for the PNG to appear on disk
 LOG_DIR        := A_ScriptDir "\..\..\logs"  ; <project root>\logs (git-ignored)
@@ -38,7 +40,21 @@ Esc:: {
 target := A_Args.Length ? A_Args[1] : DirSelect(, 0, "Folder of .clip files to export")
 if (target = "")
     ExitApp
-clean := A_Args.Length >= 2 && A_Args[2] = "/clean"
+
+; Options after the target: /clean and /loaddelay=<ms>
+clean := false
+for i, arg in A_Args {
+    if (i = 1)
+        continue
+    if (arg = "/clean")
+        clean := true
+    else if RegExMatch(arg, "i)^/loaddelay=(\d+)$", &m)
+        LOAD_DELAY := Integer(m[1])
+    else {
+        MsgBox("Unknown option: " arg, "CSP Export", "Icon!")
+        ExitApp(1)
+    }
+}
 
 clips := []
 isFolder := InStr(FileExist(target), "D")

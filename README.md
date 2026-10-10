@@ -47,7 +47,14 @@ The book always uses every PNG in `export/images`, so after re-exporting one pag
 
 **Speeding up exports:** if **Preview rendering result** is ticked in Clip Studio's export settings, it shows a preview of every page before saving it, which slows each export. To turn it off, export one page by hand (File → Export (Single Layer) → .png) and untick **Preview rendering result** in the PNG export settings. Clip Studio remembers the setting, so later exports skip the preview.
 
-You can also lower `LOAD_DELAY` near the top of `scripts/core/csp-export-png.ahk`. It's how long the script waits for each page to load before exporting it (2000 ms by default). Be careful: if it's shorter than your pages take to load, the export shortcut is sent too early and the export fails with errors such as "Export dialog didn't open". Large or complex pages need longer. Lower it in small steps, test with your biggest page, and raise it again if exports start failing.
+You can also lower the load delay: how long the export waits for each page to load before exporting it. It's the `loaddelay` setting (in milliseconds, 2000 by default) in the `[export]` section of `scripts/build-comic-app.ini`, which the app creates the first time it runs:
+
+```ini
+[export]
+loaddelay=2000
+```
+
+Changes take effect the next time you open the app. Be careful: if it's shorter than your pages take to load, the export shortcut is sent too early and the export fails with errors such as "Export dialog didn't open". Large or complex pages need longer. Lower it in small steps, test with your biggest page, and raise it again if exports start failing.
 
 ## What gets created
 
@@ -82,7 +89,7 @@ AutoHotkey64.exe scripts\core\csp-export-png.ahk "C:\Comics\my-comic\Page 003.cl
 AutoHotkey64.exe scripts\core\csp-export-png.ahk "C:\Comics\my-comic" /clean
 ```
 
-`/clean` deletes the existing PNGs first and only works with a folder. Exit codes: `0` all pages exported, `1` failed, `2` cancelled.
+`/clean` deletes the existing PNGs first and only works with a folder. `/loaddelay=<ms>` sets the load delay for this run; without it the script uses its built-in `LOAD_DELAY` (2000 ms). Exit codes: `0` all pages exported, `1` failed, `2` cancelled.
 
 **Build the books:**
 
@@ -96,7 +103,7 @@ powershell -ExecutionPolicy Bypass -File scripts\core\build-comic.ps1 -Folder "C
 
 - **Something went wrong during an export.** Each run is recorded in `logs/csp-export.log` with the reason for any failure.
 - **"Couldn't bring Clip Studio to the front"** – Windows blocked the switch. Start the export from the app or the script so you click the confirmation, and don't switch windows while it runs.
-- **"Export dialog didn't open"** – check the shortcut from the setup steps. If large pages are still loading when the export starts, increase `LOAD_DELAY` in `scripts/core/csp-export-png.ahk`.
+- **"Export dialog didn't open"** – check the shortcut from the setup steps. If large pages are still loading when the export starts, increase `loaddelay` in `scripts/build-comic-app.ini` (see "Speeding up exports").
 - **The images don't land in `export/images`** – the save dialog didn't accept the typed path. Leave the keyboard and mouse alone during the export and try again.
 - **A colour element is missing or grey** – set Expression color to RGB in the export settings (see setup step 3).
 - **Can't delete or rename a comic folder** – Clip Studio may still have it open from its last export. Use File → Open in Clip Studio, browse to another folder and cancel, or close Clip Studio.

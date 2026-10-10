@@ -16,6 +16,14 @@ BUILD_SCRIPT  := A_ScriptDir "\core\build-comic.ps1"
 SETTINGS      := A_ScriptDir "\build-comic-app.ini"  ; remembers the last folder and formats
 ALL_PAGES     := "All pages"
 
+; How long (ms) the export waits for each page to load in Clip Studio. Edit loaddelay in the
+; [export] section of build-comic-app.ini to tune it; written there with the default if missing.
+LOAD_DELAY := IniRead(SETTINGS, "export", "loaddelay", "")
+if !RegExMatch(LOAD_DELAY, "^\d+$") {
+    LOAD_DELAY := 2000
+    IniWrite(LOAD_DELAY, SETTINGS, "export", "loaddelay")
+}
+
 g := Gui(, "Build CSP Comic")
 g.SetFont("s10")
 
@@ -181,7 +189,7 @@ ExportImages(folder, page, thenBuild) {
     target := (page = "") ? folder : folder "\" page
     ; /clean: the export script deletes export\images\*.png after you confirm its start pop-up
     clean := (page = "" && cleanBox.Value) ? " /clean" : ""
-    code := RunWait('"' A_AhkPath '" "' EXPORT_SCRIPT '" "' target '"' clean)
+    code := RunWait('"' A_AhkPath '" "' EXPORT_SCRIPT '" "' target '"' clean " /loaddelay=" LOAD_DELAY)
     if FileExist(LAST_RESULT)
         Log(Trim(FileRead(LAST_RESULT, "UTF-8"), "`r`n"))
     if (code = 2) {
