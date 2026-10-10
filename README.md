@@ -45,6 +45,10 @@ When an export starts, Clip Studio asks you to confirm. Click **OK**, then **don
 
 The book always uses every PNG in `export/images`, so after re-exporting one page the others are reused unchanged.
 
+**Speeding up exports:** if **Preview rendering result** is ticked in Clip Studio's export settings, it shows a preview of every page before saving it, which slows each export. To turn it off, export one page by hand (File → Export (Single Layer) → .png) and untick **Preview rendering result** in the PNG export settings. Clip Studio remembers the setting, so later exports skip the preview.
+
+You can also lower `LOAD_DELAY` near the top of `scripts/core/csp-export-png.ahk`. It's how long the script waits for each page to load before exporting it (2000 ms by default). Be careful: if it's shorter than your pages take to load, the export shortcut is sent too early and the export fails with errors such as "Export dialog didn't open". Large or complex pages need longer. Lower it in small steps, test with your biggest page, and raise it again if exports start failing.
+
 ## What gets created
 
 ```
