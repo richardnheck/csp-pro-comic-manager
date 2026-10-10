@@ -1,0 +1,8 @@
+# Export run logs (written by scripts/core/csp-export-png.ahk)
+logs/
+
+# Personal settings for the Build CSP Comic window (last folder, format choices)
+scripts/build-comic-app.ini
+
+# Generated pages, PDF and EPUB for the example comics (rebuilt by the scripts)
+examples/**/export/
